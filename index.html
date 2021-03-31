@@ -39,6 +39,7 @@
   --color-secondary: #a3ddcb;
   --color-highlight: #ffe3de;
   --color-highlighter: #ffe3de;
+  --dot-size: 3vh;
 }
 
 body {
@@ -152,6 +153,21 @@ li.current {
   background: var(--color-highlight);
   color: var(--color-base);
 }
+
+.container::before, .container::after {
+	content: '';
+	display: block;
+	border-top: var(--dot-size) dotted var(--color-primary);
+	position: fixed;
+	width: 100%;
+	top: calc(-0.5 * var(--dot-size));
+	left: 0;
+}
+.container::after {
+	width: calc(100% + var(--dot-size) + var(--dot-size));
+  left: calc( -1 * var(--dot-size));
+}
+
 </style>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/client.js" type="text/javascript"></script>
