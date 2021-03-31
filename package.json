@@ -1,0 +1,16 @@
+{
+  "name": "team-co-op",
+  "version": "1.0.0",
+  "description": "Team Co Op game manager",
+  "main": "index.js",
+  "author": "lopis",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "4",
+    "socket.io": "^4.0.0",
+    "validator": "^13.5.2"
+  }
+}
