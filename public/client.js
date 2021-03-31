@@ -34,14 +34,17 @@ next.addEventListener('click', debounce(() => {
   socket.emit('next player', input.value)
 }))
 
-socket.on('current player', (player) => {
+socket.on('current player', (player = {}) => {
   console.log('current player', player);
   if (currentPlayer) {
     document.getElementById(currentPlayer.id).classList.remove('current')
   }
-  if (player) {
+  $player = document.getElementById(player.id)
+  if ($player) {
     currentPlayer = player
-    document.getElementById(currentPlayer.id).classList.add('current')
+    $player.classList.add('current')
+  } else {
+    console.error('Player not found', player);
   }
 })
 

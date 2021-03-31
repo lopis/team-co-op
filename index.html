@@ -91,7 +91,8 @@ li {
   padding: 0.4em;
   white-space: nowrap;
   margin: 1px 5px;
-  list-style-position: inside
+  list-style-position: inside;
+  transition: background 100ms ease-in-out;
 }
 
 .container {
@@ -145,6 +146,11 @@ li {
   background-color: transparent;
   border: 3px solid var(--color-secondary);
   color: var(--color-secondary);
+}
+
+li.current {
+  background: var(--color-highlight);
+  color: var(--color-base);
 }
 </style>
 <script src="/socket.io/socket.io.js"></script>
