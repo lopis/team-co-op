@@ -46,6 +46,17 @@ const getName = () => {
   return name
 }
 
+const selectNextPlayer = () => {
+  if (players.length < 2) return
+  let nextPlayer = players.getRandom()
+  while (nextPlayer === currentPlayer) {
+    nextPlayer = players.getRandom()
+  }
+  console.log('Next player is', nextPlayer)
+  currentPlayer = nextPlayer
+  io.emit('current player', currentPlayer)
+}
+
 io.on('connection', (socket) => {
   const player = {
     name: getName(),
@@ -61,18 +72,11 @@ io.on('connection', (socket) => {
   socket.on('player message', (msg = '') => {
     safeMsg = sanitize(String(msg)).toLowerCase()
     io.emit('player message', msg)
+    selectNextPlayer()
   })
-  socket.on('next player', () => {
-    if (players.length < 2) return
-    let nextPlayer = players.getRandom()
-    while (nextPlayer === currentPlayer) {
-      nextPlayer = players.getRandom()
-    }
-    console.log('Next player is', nextPlayer)
-    currentPlayer = nextPlayer
-    io.emit('current player', currentPlayer)
-  })
+  socket.on('next player', selectNextPlayer)
   io.emit('player list', players)
+  socket.emit('new player', player)
   socket.emit('current player', currentPlayer)
 })
 
