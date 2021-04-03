@@ -5,12 +5,16 @@ const [
   messages,
   users,
   next,
+  submit,
+  theme,
 ] = [
   'form',
   'input',
   'messages',
   'users',
   'next',
+  'submit',
+  'theme',
 ].map(id => document.getElementById(id))
 let players = []
 let currentPlayer = {}
@@ -25,11 +29,15 @@ const debounce = (func, timeout = 1000) => {
 }
 
 const unlockInput = () => {
+  submit.removeAttribute('disabled')
+  next.setAttribute('disabled', true)
   input.value = ''
   input.removeAttribute('disabled')
   input.setAttribute('placeholder', 'Type your order')
 }
 const lockInput = () => {
+  submit.setAttribute('disabled', true)
+  next.removeAttribute('disabled')
   input.value = ''
   input.setAttribute('disabled', true)
   input.setAttribute('placeholder', 'Wait for your turn')
@@ -66,6 +74,13 @@ const updatePlayers = () => {
   }
 }
 
+const createMove = (msg) => {
+  var item = document.createElement('li')
+  item.textContent = msg
+  messages.appendChild(item)
+  messages.scrollTo(0, messages.scrollHeight)
+}
+
 form.addEventListener('submit', e => {
   e.preventDefault()
   if (input.value) {
@@ -74,9 +89,15 @@ form.addEventListener('submit', e => {
   }
 })
 
-next.addEventListener('click', debounce(() => {
-  socket.emit('next player', input.value)
-}))
+next.addEventListener('click', () => {
+  next.setAttribute('disabled', true)
+  setTimeout(() => socket.emit('next player'), 100)
+})
+
+theme.addEventListener('click', () => {
+  document.body.classList.toggle('dark-theme')
+  document.body.classList.toggle('light-theme')
+})
 
 socket.on('new player', (player) => {
   localPlayer = player
@@ -94,18 +115,19 @@ socket.on('current player', (player) => {
       return
     }
   }
-
-  console.error('Player not found', player);
 })
 
-socket.on('player message', (msg) => {
-  var item = document.createElement('li')
-  item.textContent = msg
-  messages.appendChild(item)
-  window.scrollTo(0, document.body.scrollHeight)
-})
+socket.on('player message', createMove)
 
 socket.on('player list', (serverPlayers) => {
   players = serverPlayers
   updatePlayers()
 })
+
+// let i = 0
+// while (i < 50) {
+//   const msg = `Move #${i}`
+//   setTimeout(() => createMove(msg), 50 * i)
+//   i++
+// }
+

@@ -11,6 +11,7 @@ app.get('/', (req, res) => {
 app.use(express.static('public'))
 
 let players = []
+
 let currentPlayer = null
 const treeNames = [
   'Pterocarpus', 'Betula', 'Acacia', 'Jengkol',
@@ -36,12 +37,14 @@ const sanitize = msg => {
   return trim(escape(blacklist(msg, badCharList)))
 }
 const getId = () => {
-  return (Math.floor((1+Math.random())*0x10000)).toString(16)
+  return (Math.floor((Math.random())*0xFFFFFF)).toString(16)
 }
 const getName = () => {
   let name = ''
-  while (!name || players.find(p => p.name === name)) {
+  let i = 0
+  while (!name || !!players.find(p => p.name === name)) {
     name = `${adjectives.getRandom()} ${treeNames.getRandom()}`
+    i++
   }
   return name
 }
@@ -57,11 +60,21 @@ const selectNextPlayer = () => {
   io.emit('current player', currentPlayer)
 }
 
-io.on('connection', (socket) => {
-  const player = {
+const createPlayer = () => {
+  return {
     name: getName(),
     id: getId(),
   }
+}
+
+// DEBUG.
+// Array(5)
+// .fill()
+// .forEach(() => players.push(createPlayer()))
+// players.sort((a,b) => a.name > b.name ? 1: b.name > a.name ? -1: 0)
+
+io.on('connection', (socket) => {
+  const player = createPlayer()
   players.push(player)
   console.log('new user', player.name)
   socket.on('disconnect', () => {
@@ -71,10 +84,17 @@ io.on('connection', (socket) => {
   })
   socket.on('player message', (msg = '') => {
     safeMsg = sanitize(String(msg)).toLowerCase()
-    io.emit('player message', msg)
+    console.log('next move', safeMsg.toLowerCase());
+    io.emit('player message', safeMsg)
     selectNextPlayer()
   })
   socket.on('next player', selectNextPlayer)
+
+  if (players.length === 1) {
+    currentPlayer = player
+    console.log('First player is', currentPlayer)
+  }
+
   io.emit('player list', players)
   socket.emit('new player', player)
   socket.emit('current player', currentPlayer)

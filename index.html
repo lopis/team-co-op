@@ -7,7 +7,7 @@
   <link rel="shortcut icon" href="favicon.png" />
   <title>Team Co-Op</title>
 </head>
-<body class="container dotted">
+<body class="container dotted dark-theme">
   <h1>Team Co-Op</h1>
   <div class="columns">
     <div class="left">
@@ -27,9 +27,13 @@
       disabled/>
     <div>
       <button id="next" type="button" class="next">Next Player</button>
-      <button type="submit" class="ok">Submit Move</button>
+      <button id="submit" type="submit" class="ok">Submit Move</button>
     </div>
   </form>
+  <div id="theme" title="toggle theme">
+    <div id="dark">⚫️</div>
+    <div id="light">⚪️</div>
+  </div>
 </body>
 <style>
 @font-face {
@@ -37,13 +41,30 @@
   src: url('/YanoneKaffeesatz-VariableFont_wght.ttf');
 }
 
-:root {
+.dark-theme {
   --color-base: #0a043c;
   --color-primary: #03506f;
+  --color-primary-lighter: #016186;
+
   --color-secondary: #a3ddcb;
   --color-highlight: #ffe3de;
   --color-highlighter: #ffe3de;
   --dot-size: 8vh;
+}
+
+.light-theme {
+  --color-base: #faf3e0;
+  --color-primary: #eabf9f;
+  --color-primary-lighter: #eabf9f;
+
+  --color-secondary: #b68973;
+  --color-highlight: #1e212d;
+  --color-highlighter: #1e212d;
+  --dot-size: 8vh;
+}
+
+html {
+  font-size: 3vmin;
 }
 
 body {
@@ -55,7 +76,7 @@ body {
 }
 
 body, button, input {
-  font-size: 3vmin;
+  font-size: 1rem;
   font-family: 'YanoneKaffeesatz';
 }
 
@@ -63,7 +84,7 @@ input, button {
 	margin: 0.5rem;
   background: transparent;
   color: var(--color-base);
-  padding: 1rem;
+  padding: 0.6rem;
   box-sizing: border-box;
   border-radius: 0.1rem;
 }
@@ -71,14 +92,28 @@ input, button {
 input {
   background-color: var(--color-highlight);
   border: none;
-  font-size: 3rem;
+  font-size: 2rem;
   text-transform: uppercase;
   text-align: center;
   font-weight: bold;
+  transition: background 150ms ease-in-out;
+}
+
+input:focus {
+	outline: 5px solid var(--color-primary);
 }
 
 input[disabled] {
-  background-color: rgba(255,255,255,0.5);
+  background-color: transparent;
+  color: var(--color-highlight);
+}
+
+button[disabled] {
+  opacity: 0.5;
+}
+
+button:active:not([disabled]) {
+  transform: scale(0.95)
 }
 
 h1 {
@@ -87,7 +122,7 @@ h1 {
 
 h1, h2 {
 	margin: 0;
-	margin-bottom: 1em;
+	margin-bottom: 0.5rem;
 }
 
 ul, ol {
@@ -95,7 +130,7 @@ ul, ol {
 }
 
 li {
-  background: var(--color-primary);
+  background: linear-gradient(0deg, var(--color-primary), var(--color-primary-lighter));
   color: var(--color-highlight);
   padding: 0.4em;
   white-space: nowrap;
@@ -123,7 +158,7 @@ li {
   display: flex;
   flex-grow: 1;
   justify-content: space-between;
-  max-height: 75vh;
+  max-height: 60vh;
 }
 
 .left, .right {
@@ -144,8 +179,9 @@ li {
 	display: flex;
 	flex-flow: column wrap;
 	max-height: 80%;
-  align-items: flex-start;
+  align-content: flex-start;
   overflow: auto;
+  list-style: none;
 }
 
 #messages {
@@ -169,13 +205,23 @@ li.current {
   color: var(--color-base);
 }
 li.local {
-  background: var(--color-secondary);
-  color: var(--color-base);
   order: 1;
 }
 li.local::after {
-  content: " (You)";
-  color: var(--color-primary);
+	content: "You";
+	position: relative;
+	font-size: 60%;
+	top: -0.3em;
+	right: -0.4em;
+	background: var(--color-highlight);
+	color: var(--color-primary);
+	padding: 0.1ch 1.1ch;
+	border-radius: 1ch;
+	margin: 1ch;
+}
+li.current.local::after {
+	background: var(--color-primary);
+	color: var(--color-highlight);
 }
 
 .dotted::before, .dotted::after {
@@ -187,11 +233,30 @@ li.local::after {
 	top: calc(-0.8 * var(--dot-size));
 	left: 0;
 }
+
 .dotted::after {
 	width: calc(100% + var(--dot-size) + var(--dot-size));
   left: calc( -1 * var(--dot-size));
 }
 
+#theme {
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 1;
+	display: flex;
+}
+#dark, #light {
+	padding: 0.5rem;
+	margin: 0.5rem;
+  cursor: pointer;
+}
+.dark-theme #dark {
+  display: none;
+}
+.light-theme #light {
+  display: none;
+}
 </style>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/client.js" type="text/javascript"></script>
