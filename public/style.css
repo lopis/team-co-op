@@ -1,0 +1,217 @@
+@font-face {
+    font-family: 'YanoneKaffeesatz';
+    src: url('/YanoneKaffeesatz-VariableFont_wght.ttf');
+  }
+  
+  .dark-theme {
+    --color-base: #0a043c;
+    --color-primary: #03506f;
+    --color-primary-lighter: #016186;
+  
+    --color-secondary: #a3ddcb;
+    --color-highlight: #ffe3de;
+    --color-highlighter: #ffe3de;
+    --dot-size: 8vh;
+  }
+  
+  .light-theme {
+    --color-base: #faf3e0;
+    --color-primary: #eabf9f;
+    --color-primary-lighter: #eabf9f;
+  
+    --color-secondary: #b68973;
+    --color-highlight: #0a043c;
+    --color-highlighter: #0a043c;
+    --dot-size: 8vh;
+  }
+  
+  html {
+    font-size: 3vmin;
+  }
+  
+  body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--color-base);
+    color: var(--color-highlighter);
+  }
+  
+  body, button, input {
+    font-size: 1rem;
+    font-family: 'YanoneKaffeesatz';
+  }
+  
+  input, button {
+      margin: 0.5rem;
+    background: transparent;
+    color: var(--color-base);
+    padding: 0.6rem;
+    box-sizing: border-box;
+    border-radius: 0.1rem;
+  }
+  
+  input {
+    background-color: var(--color-highlight);
+    border: none;
+    font-size: 2rem;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: bold;
+    transition: background 150ms ease-in-out;
+  }
+  
+  input:focus {
+      outline: 5px solid var(--color-primary);
+  }
+  
+  input[disabled] {
+    background-color: transparent;
+    color: var(--color-highlight);
+      outline: none;
+  }
+  
+  button[disabled] {
+    opacity: 0.5;
+  }
+  
+  button:active:not([disabled]) {
+    transform: scale(0.95)
+  }
+  
+  h1 {
+    text-align: center;
+  }
+  
+  h1, h2 {
+      margin: 0;
+      margin-bottom: 0.5rem;
+  }
+  
+  ul, ol {
+    padding: 0;
+  }
+  
+  li {
+    background: linear-gradient(0deg, var(--color-primary), var(--color-primary-lighter));
+    color: var(--color-highlight);
+    padding: 0.4em;
+    white-space: nowrap;
+    margin: 1px 5px;
+    list-style-position: inside;
+    transition: background 100ms ease-in-out;
+    order: 2;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    padding: 5vh;
+    box-sizing: border-box;
+  }
+  
+  .middle {
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .columns {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
+    max-height: 60vh;
+  }
+  
+  .left, .right {
+    min-width: 200px;
+    /* width: 15vw; */
+    margin: 0;
+  }
+  
+  .left {
+    flex-grow: 1;
+  }
+  
+  .right h2 {
+    text-align: right;
+  }
+  
+  #users {
+      display: flex;
+      flex-flow: column wrap;
+      max-height: 80%;
+    align-content: flex-start;
+    overflow: auto;
+    list-style: none;
+  }
+  
+  #messages {
+      overflow: auto;
+      max-height: 80%;
+  }
+  
+  .ok {
+    background-color: var(--color-secondary);
+    border: 3px solid var(--color-secondary);
+  }
+  
+  .next {
+    background-color: transparent;
+    border: 3px solid var(--color-secondary);
+    color: var(--color-secondary);
+  }
+  
+  li.current {
+    background: var(--color-highlight);
+    color: var(--color-base);
+  }
+  li.local {
+    order: 1;
+  }
+  li.local::after {
+      content: "You";
+      position: relative;
+      font-size: 60%;
+      top: -0.3em;
+      right: -0.4em;
+      background: var(--color-highlight);
+      color: var(--color-primary);
+      padding: 0.1ch 1.1ch;
+      border-radius: 1ch;
+      margin: 1ch;
+  }
+  li.current.local::after {
+      background: var(--color-primary);
+      color: var(--color-highlight);
+  }
+  
+  .dotted::before, .dotted::after {
+      content: '';
+      display: block;
+      border-top: var(--dot-size) dotted var(--color-primary);
+      position: fixed;
+      width: 100%;
+      top: calc(-0.8 * var(--dot-size));
+      left: 0;
+  }
+  
+  .dotted::after {
+      width: calc(100% + var(--dot-size) + var(--dot-size));
+    left: calc( -1 * var(--dot-size));
+  }
+  
+  #theme {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 1;
+      display: flex;
+  }
+  #theme-icon {
+    height: 1em;
+    width: 1em;
+      padding: 1rem;
+    cursor: pointer;
+  }
